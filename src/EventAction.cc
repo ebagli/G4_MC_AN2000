@@ -291,7 +291,7 @@ void EventAction::EndOfEventAction(const G4Event* evt){
             kinEtotOxygen  += nudO * step * xs;
             //G4cout << nudO << " " << step << " " << xs << " " << kinEtotOxygen << G4endl;
             //while(!getchar());
-			/*
+
             if((steptot > stepSave * stepSaveBin) || (i1 == n_hit_sd - 1)){
                 
                 stepTemp = (steptot-steptotPre);
@@ -325,10 +325,10 @@ void EventAction::EndOfEventAction(const G4Event* evt){
 				
              
             }
-            */
+
             kinEprev = kinE;
         }
-        
+/*
         analysisManager->FillNtupleDColumn(0, nudavg / steptot);
         analysisManager->FillNtupleDColumn(1, eldavg / steptot);
         analysisManager->FillNtupleDColumn(2, nudOavg / steptot);
@@ -339,7 +339,7 @@ void EventAction::EndOfEventAction(const G4Event* evt){
         analysisManager->FillNtupleDColumn(7, kinEtot / steptot);
         analysisManager->FillNtupleIColumn(8, eventID);
         analysisManager->AddNtupleRow();
-        
+*/
     }
 }
 
