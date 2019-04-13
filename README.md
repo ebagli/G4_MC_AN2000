@@ -1,7 +1,6 @@
 # GECO_INFN_AN2000
 The application simulates the AN2000 line with the experimental setup used for the GECO-INFN-CSNV experiment.
-The application is based on the Geant4 10.03 release. Please cite the Geant4 articles (http://www.geant4.org/geant4/), the Geant4-Channeling article (http://link.springer.com/article/10.1140%2Fepjc%2Fs10052-014-2996-y) if you use the application and the Geant4-Crystal article (submitted to NIMB).
-- http://link.springer.com/article/10.1140%2Fepjc%2Fs10052-014-2996-y#page-1
+The application is based on the Geant4 10.03 release. If you use the application, please cite the Geant4 articles (http://www.geant4.org/geant4/), the Geant4-Channeling article (http://link.springer.com/article/10.1140%2Fepjc%2Fs10052-014-2996-y)  and the Geant4-Crystal article (http://dx.doi.org/10.1016/j.nimb.2017.03.092)
 
 The charged particles impinging on a crystal may undergo the channeling effect. Because of the channeled particle traverse the crystal with a different nuclear encounter probability with respect to an amorphous material, the inelastic interaction rate under channeling condition is modified.
 
