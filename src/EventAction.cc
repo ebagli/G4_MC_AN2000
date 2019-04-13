@@ -329,14 +329,14 @@ void EventAction::EndOfEventAction(const G4Event* evt){
             kinEprev = kinE;
         }
         
-        analysisManager->FillNtupleDColumn(0, nudavg / stepTemp);
-        analysisManager->FillNtupleDColumn(1, eldavg / stepTemp);
-        analysisManager->FillNtupleDColumn(2, nudOavg / stepTemp);
-        analysisManager->FillNtupleDColumn(3, kinEtotOxygen / stepTemp);
+        analysisManager->FillNtupleDColumn(0, nudavg / steptot);
+        analysisManager->FillNtupleDColumn(1, eldavg / steptot);
+        analysisManager->FillNtupleDColumn(2, nudOavg / steptot);
+        analysisManager->FillNtupleDColumn(3, kinEtotOxygen / steptot);
         analysisManager->FillNtupleDColumn(4, steptot / CLHEP::micrometer);
-        analysisManager->FillNtupleDColumn(5, (steptotPre + stepTemp * 0.5) / CLHEP::micrometer);
+        analysisManager->FillNtupleDColumn(5, (steptotPre + steptot * 0.5) / CLHEP::micrometer);
         analysisManager->FillNtupleDColumn(6, xs);
-        analysisManager->FillNtupleDColumn(7, kinEtot / stepTemp);
+        analysisManager->FillNtupleDColumn(7, kinEtot / steptot);
         analysisManager->FillNtupleIColumn(8, eventID);
         analysisManager->AddNtupleRow();
         
