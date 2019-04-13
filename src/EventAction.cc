@@ -322,10 +322,10 @@ void EventAction::EndOfEventAction(const G4Event* evt){
                     nudAlavg = 0.;
 
                 }
-				*/
+				
              
             }
-            
+            */
             kinEprev = kinE;
         }
         
