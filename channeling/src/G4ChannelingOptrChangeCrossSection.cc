@@ -97,7 +97,7 @@ void G4ChannelingOptrChangeCrossSection::StartRun(){
                         break;
                     case fElectromagnetic:
                         if(subType == fCoulombScattering){
-                            fProcessToDensity[processName] = fDensityRatioNuD;
+                            fProcessToDensity[processName] = fDensityRatioNuDElD;
                         }
                         if(subType == fMultipleScattering){
                             fProcessToDensity[processName] = fDensityRatioZero;
@@ -112,7 +112,7 @@ void G4ChannelingOptrChangeCrossSection::StartRun(){
                         }
                         if(subType == fBremsstrahlung ||
                            subType == fNuclearStopping){
-                            fProcessToDensity[processName] = fDensityRatioNuDElD;
+                            fProcessToDensity[processName] = fDensityRatioElD;
                         }
                         
                         if(subType == fCerenkov ||

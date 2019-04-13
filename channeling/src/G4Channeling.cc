@@ -152,57 +152,6 @@ G4bool G4Channeling::UpdateParameters(const G4Track& aTrack){
             GetTrackData(aTrack)->Reset();
             return false;
         }
-
-        //----------------------------------------
-        // Initialize variables for polarization modification
-        //----------------------------------------
-    
-        const G4DynamicParticle*  pParticle  = aTrack.GetDynamicParticle() ;
-        const G4ParticleDefinition* pParticleDef   = pParticle->GetDefinition() ;
-        
-        G4ThreeVector spin = aTrack.GetPolarization();
-        G4double spinmag = spin.mag();
-        G4double anomaly = 0.;
-        G4double eta     = 0.;
-
-        if(spinmag != 0.){
-            G4double g_BMT     = 2.;
-            G4double magMoment = pParticleDef->GetPDGMagneticMoment();
-            G4double spinPDG   = pParticleDef->GetPDGSpin();
-            G4double muB       = 0.5*CLHEP::eplus*CLHEP::hbar_Planck/(mass/CLHEP::c_squared);
-            
-            if(pParticleDef == G4LambdacPlus::Definition()    || pParticleDef == G4AntiLambdacPlus::Definition()){
-                anomaly = +0.3;
-                magMoment = 2.*(anomaly + 1.)*spinPDG*muB;
-            }
-            else if(pParticleDef == G4XibMinus::Definition()  || pParticleDef == G4AntiXibMinus::Definition()){
-                anomaly = +1.38;
-                magMoment = 2.*(anomaly + 1.)*spinPDG*muB;
-            }
-            else if(pParticleDef == G4SigmaPlus::Definition() || pParticleDef == G4AntiSigmaPlus::Definition()){
-                G4double muN       = 0.5*CLHEP::eplus*CLHEP::hbar_Planck/(CLHEP::proton_mass_c2 /CLHEP::c_squared);
-                magMoment = 2.458 * muN;
-                g_BMT = std::abs(magMoment)/muB/spinPDG;
-                anomaly   = -(g_BMT - 2.)/2.;
-            }
-            else{
-                if(spinPDG != 0. && muB != 0.){
-                    g_BMT = std::abs(magMoment)/muB/spinPDG;
-                }
-                anomaly   = (g_BMT + 2.)/2.;
-            }
-            
-            if(pParticleDef->GetLeptonNumber() > 0. || pParticleDef->GetBaryonNumber() > 0. ){
-                anomaly = -anomaly;
-            }    
-            
-            if(spinPDG != 0. && muB != 0.){
-                eta = 0.05;
-            }
-            else{
-                eta = 0.;
-            }
-        }
         
         //----------------------------------------
         // Get the momentum in the solid reference
@@ -308,73 +257,15 @@ G4bool G4Channeling::UpdateParameters(const G4Track& aTrack){
 
             efx += (step * matData->GetEFX()->GetEC(pos));
             efy += (step * matData->GetEFY()->GetEC(pos));
-            
-            //----------------------------------------
-            // Spin Precession
-            //----------------------------------------
-            if (spinmag != 0. and mom.mag() != 0.) {
-                G4ThreeVector mu = mom;
-                mu *= (1./mom.mag());
-                G4ThreeVector ef;
-                GetEF(matData,pos,ef);
-                ef /= CLHEP::c_light;
-
-                //----------------------------------------
-                // Get the momentum in the reference frame
-                // solidal to the bent planes and rotate
-                // to the reference frame
-                //----------------------------------------
-                if(matData->IsBent()){
-                    G4ThreeVector axis010 = (*theTouchable->GetRotation())(k010);
-                    mu.rotate(axis010,(posPre.z()+stepTot)/matData->GetBR(posPre).x());
-                    ef.rotate(axis010,(posPre.z()+stepTot)/matData->GetBR(posPre).x());
-                }
-            
-                //----------------------------------------
-                // Get the momentum in the crystal reference
-                // frame and rotate to the solid reference frame
-                //----------------------------------------
-            
-                aLCV->RotateToSolid(mu);
-                aLCV->RotateToSolid(ef);
-            
-                //----------------------------------------
-                // Get the momentum in the solid reference
-                // frame and rotate to the world reference frame
-                //----------------------------------------
-                mu = ((*theTouchable->GetRotation()).inverse())(mu);
-                ef = ((*theTouchable->GetRotation()).inverse())(ef);
-            
-                G4ThreeVector BField = G4ThreeVector(0.,0.,0.);
-            
-                G4double udb = anomaly*beta*gamma/(1.+gamma) * (BField * mu);
-                G4double ucb = (anomaly+1./gamma)/beta;
-                G4double uce = anomaly + 1./(gamma+1.);
-                G4double ude = beta*gamma/(1.+gamma)*(ef*mu);
-
-                G4double pcharge;
-                if (pParticleDef->GetPDGCharge() == 0.) pcharge = 1.;
-                else pcharge = pParticleDef->GetPDGCharge();
-
-                G4ThreeVector dSpin(0.,0.,0.);
-                dSpin = ( ucb*(spin.cross(BField))-udb*(spin.cross(mu))
-                        - uce*(mu*(spin*ef) - ef*(spin*mu))
-                        + eta/2.*(spin.cross(ef) - ude*(spin.cross(mu))
-                        + (mu*(spin*BField) - BField*(spin*mu)) ) );
-                dSpin*= (CLHEP::eplus/mass)*CLHEP::c_light;
-                dSpin*= pcharge;
-
-                spin += dSpin*step;
-                spin.setMag(spinmag);
-            }
+          
             //----------------------------------------
         } while(stepTot<integrationLimit);
         
         nud /= stepTot;
         eld /= stepTot;
 
-        if(nud < 1.E-10) {nud = 1.E-10;}
-        if(eld < 1.E-10) {eld = 1.E-10;}
+        if(nud < 1.E-2) {nud = 1.E-2;}
+        if(eld < 1.E-2) {eld = 1.E-2;}
         
         GetTrackData(aTrack)->SetNuD(nud);
         GetTrackData(aTrack)->SetElD(eld);
