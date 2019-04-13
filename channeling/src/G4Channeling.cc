@@ -295,7 +295,6 @@ G4bool G4Channeling::UpdateParameters(const G4Track& aTrack){
         
         GetTrackData(aTrack)->SetMomCh(mom);
         GetTrackData(aTrack)->SetPosCh(pos);
-        GetTrackData(aTrack)->SetSpinCh(spin);
         return true;
     }
     else{
