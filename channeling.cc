@@ -68,12 +68,6 @@ int main(int argc,char** argv)
     physlist->ReplacePhysics(new G4EmStandardPhysics_option4_channeling());
     biasingPhysics->PhysicsBiasAllCharged();
     physlist->RegisterPhysics(biasingPhysics);
-
-    G4GenericBiasingPhysics* biasingPhysics = new G4GenericBiasingPhysics();
-    physlist->RegisterPhysics(new G4ChannelingPhysics());
-    biasingPhysics->PhysicsBiasAllCharged();
-    physlist->RegisterPhysics(biasingPhysics);
-
     
     runManager->SetUserInitialization(physlist);
     runManager->SetUserInitialization(new UserActionInitialization());
