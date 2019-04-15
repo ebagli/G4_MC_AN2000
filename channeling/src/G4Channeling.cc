@@ -133,7 +133,8 @@ G4bool G4Channeling::UpdateParameters(const G4Track& aTrack){
         G4double gamma = aTrack.GetTotalEnergy()/mass;
         G4double beta = aTrack.GetVelocity()/CLHEP::c_light;
         G4double m_e = CLHEP::electron_mass_c2;
-       
+        G4double E = aTrack.GetTotalEnergy();
+
         //----------------------------------------
         // Check if the crystal is bent
         //----------------------------------------
@@ -214,25 +215,27 @@ G4bool G4Channeling::UpdateParameters(const G4Track& aTrack){
             // Function integration algorithm
             // 4th Order Runge-Kutta
             //----------------------------------------
-            
+
+            G4double temp = 0.5 * mom.z() / E;
+
             GetEF(matData,pos,efxy);
             posk1 = step / mom.z() * mom;
-            momk1 = step / beta * Z * efxy;
+            momk1 = step * temp * Z * efxy;
             if(isBent) momk1.setX(momk1.x() - step * mom.z() * beta / (matData->GetBR(pos)).x());
             
             GetEF(matData,pos_temp = pos + posk1 * 0.5,efxy);
             posk2 = step / mom.z() * (mom + momk1 * 0.5);
-            momk2 = step / beta * Z * efxy;
+            momk2 = step * temp * Z * efxy;
             if(isBent) momk2.setX(momk2.x() - step * mom.z() * beta / (matData->GetBR(pos_temp)).x());
 
             GetEF(matData,pos_temp = pos + posk2 * 0.5,efxy);
             posk3 = step / mom.z() * (mom + momk2 * 0.5);
-            momk3 = step / beta * Z * efxy;
+            momk3 = step * temp * Z * efxy;
             if(isBent) momk3.setX(momk3.x() - step * mom.z() * beta / (matData->GetBR(pos_temp)).x());
             
             GetEF(matData,pos_temp = pos + posk3,efxy);
             posk4 = step / mom.z() * (mom + momk3);
-            momk4 = step / beta * Z * efxy;
+            momk4 = step * temp * Z * efxy;
             if(isBent) momk4.setX(momk4.x() - step * mom.z() * beta / (matData->GetBR(pos_temp)).x());
 
             pos = pos + oneSixth * (posk1 + 2.*posk2 + 2.*posk3 + posk4);
